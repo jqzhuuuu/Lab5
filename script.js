@@ -128,7 +128,7 @@ readButton.addEventListener('click', (event) => {
       utterThis.voice = voices[i];
     }
   }
-  //utterThis.volume = volumeValue/100;
+  utterThis.volume = volumeValue/100;
   console.log(utterThis.text);
   synth.speak(utterThis);
   utterThis.text = bottomText;
