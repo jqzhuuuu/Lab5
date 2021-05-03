@@ -2,6 +2,7 @@
 
 ## Author(s):
 - Joshua Zhu
+- Nathaniel Wong
 
 ## Part 1:
 
