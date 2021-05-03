@@ -7,6 +7,10 @@ const img = new Image(); // used to load image from <input> and draw to canvas
 const canvas = document.getElementById('user-image');
 const ctx = canvas.getContext('2d');
 
+ctx.font = '69px Georgia';
+ctx.textAlign = 'center';
+
+
 const clearButton = document.getElementById('button-group').children[0];
 const readButton = document.getElementById('button-group').children[1];
 const generateButton = document.getElementById('generate-meme').children[6];
@@ -14,7 +18,7 @@ const generateButton = document.getElementById('generate-meme').children[6];
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
-
+  ctx.fillStyle = 'black';
   //clear canvas context
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -27,7 +31,7 @@ img.addEventListener('load', () => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
   //draw uploaded image onto canvas with correct width heightt startX and startY using getDimensions
-  let dimensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
+  var dimensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
   ctx.drawImage(img, dimensions.startX, dimensions.startY, dimensions.width, dimensions.height);
 
   // Some helpful tips:
@@ -44,7 +48,39 @@ imageInput.addEventListener('change', () => {
   img.alt = document.getElementById("image-input").files[0].name;
 });
 
+const generateForm = document.getElementById('generate-meme');
 
+generateForm.addEventListener('submit', (event) => {
+  //grab top/bottom text
+  event.preventDefault();
+  const topText = document.getElementById('text-top').value;
+  const bottomText = document.getElementById('text-bottom').value;
+  
+  //write to canvas
+  ctx.fillStyle = 'white';
+  
+  //write toptext
+  ctx.fillText(topText, canvas.width/2, 59);
+  ctx.strokeText(topText, canvas.width/2, 59);
+  //write bottomtext
+  ctx.fillText(bottomText, canvas.width/2, canvas.height-10);
+  ctx.strokeText(bottomText, canvas.width/2, canvas.height-10);
+
+  //toggle buttons
+  generateButton.disabled = true;
+  clearButton.disabled = false;
+  readButton.disabled = false;
+});
+
+clearButton.addEventListener('click', () => {
+  //clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  //revert buttons
+  generateButton.disabled = false;
+  clearButton.disabled = true;
+  readButton.disabled = true;
+});
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
