@@ -1,21 +1,28 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
-img.src = 'images/lab.jpg';
+
+
 
 const canvas = document.getElementById('user-image');
 const ctx = canvas.getContext('2d');
 
+const clearButton = document.getElementById('button-group').children[0];
+const readButton = document.getElementById('button-group').children[1];
+const generateButton = document.getElementById('generate-meme').children[6];
+
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
-  //img.src = URL.createObjectURL(document.getElementById("image-input").files[0]);
-  //console.log(img.src);
-  
+
   //clear canvas context
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   //toggle relevant buttons by disabling / enabling them
-  
+  generateButton.disabled = false;
+  clearButton.disabled = true;
+  readButton.disabled = true;
+
   //fill canvas content with black to add borders
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
@@ -28,6 +35,16 @@ img.addEventListener('load', () => {
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
 });
+
+const imageInput = document.getElementById('image-input');
+
+imageInput.addEventListener('change', () => {
+
+  img.src = URL.createObjectURL(document.getElementById("image-input").files[0]);
+  img.alt = document.getElementById("image-input").files[0].name;
+});
+
+
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
