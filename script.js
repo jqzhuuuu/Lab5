@@ -7,7 +7,7 @@ const img = new Image(); // used to load image from <input> and draw to canvas
 const canvas = document.getElementById('user-image');
 const ctx = canvas.getContext('2d');
 
-ctx.font = '69px Georgia';
+ctx.font = '50px Georgia';
 ctx.textAlign = 'center';
 
 
@@ -128,6 +128,8 @@ readButton.addEventListener('click', (event) => {
       utterThis.voice = voices[i];
     }
   }
+  //utterThis.volume = volumeValue/100;
+  console.log(utterThis.text);
   synth.speak(utterThis);
   utterThis.text = bottomText;
   synth.speak(utterThis);
@@ -139,6 +141,33 @@ readButton.addEventListener('click', (event) => {
   speechSynthesis.speak(botUtter);
 */
 });
+
+var volumeIcon = document.getElementById('volume-group').children[0];
+const volumeBar = document.getElementById('volume-group').children[1];
+var volumeValue = 100;
+
+volumeBar.addEventListener('change', () => {
+  volumeValue = volumeBar.value;
+  //console.log(volumeValue /100);
+  if(volumeValue < 1)
+  {
+    volumeIcon.src = 'icons/volume-level-0.svg';
+  }
+  else if(volumeValue < 34)
+  {
+    volumeIcon.src = 'icons/volume-level-1.svg';
+  }
+  else if(volumeValue < 67)
+  {
+    volumeIcon.src = 'icons/volume-level-2.svg';
+  }
+  else
+  {
+    volumeIcon.src = 'icons/volume-level-3.svg';
+  }
+});
+
+
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
