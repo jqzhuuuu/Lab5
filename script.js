@@ -49,22 +49,25 @@ imageInput.addEventListener('change', () => {
 });
 
 const generateForm = document.getElementById('generate-meme');
+var topText = "";
+var bottomText = "";
 
 generateForm.addEventListener('submit', (event) => {
   //grab top/bottom text
   event.preventDefault();
-  const topText = document.getElementById('text-top').value;
-  const bottomText = document.getElementById('text-bottom').value;
+
+  topText = document.getElementById('text-top').value;
+  bottomText = document.getElementById('text-bottom').value;
   
   //write to canvas
   ctx.fillStyle = 'white';
-  
+
   //write toptext
-  ctx.fillText(topText, canvas.width/2, 59);
-  ctx.strokeText(topText, canvas.width/2, 59);
+  ctx.fillText(topText, canvas.width/2, 49);
+  ctx.strokeText(topText, canvas.width/2, 49);
   //write bottomtext
-  ctx.fillText(bottomText, canvas.width/2, canvas.height-10);
-  ctx.strokeText(bottomText, canvas.width/2, canvas.height-10);
+  ctx.fillText(bottomText, canvas.width/2, canvas.height-20);
+  ctx.strokeText(bottomText, canvas.width/2, canvas.height-20);
 
   //toggle buttons
   generateButton.disabled = true;
@@ -80,6 +83,61 @@ clearButton.addEventListener('click', () => {
   generateButton.disabled = false;
   clearButton.disabled = true;
   readButton.disabled = true;
+});
+
+const voice = document.getElementById('voice-selection');
+voice.disabled = false;
+
+//#region sampled code form SpeechSynthesis API
+var synth = window.speechSynthesis;
+
+var voiceSelect = voice;
+var voices = [];
+
+function populateVoiceList() {
+  voice.removeChild(voice.firstChild);
+  voices = synth.getVoices();
+
+  for(var i = 0; i < voices.length ; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    voiceSelect.appendChild(option);
+  }
+}
+
+populateVoiceList();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+//#endregion
+
+readButton.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  var utterThis = new SpeechSynthesisUtterance(topText);
+  var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+  for(var i = 0; i < voices.length ; i++) {
+    if(voices[i].name === selectedOption) {
+      utterThis.voice = voices[i];
+    }
+  }
+  synth.speak(utterThis);
+  utterThis.text = bottomText;
+  synth.speak(utterThis);
+
+/*
+  let topUtter = new SpeechSynthesisUtterance(topText);
+  let botUtter = new SpeechSynthesisUtterance(bottomText);
+  speechSynthesis.speak(topUtter);
+  speechSynthesis.speak(botUtter);
+*/
 });
 
 /**
